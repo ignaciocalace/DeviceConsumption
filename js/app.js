@@ -70,8 +70,6 @@ function program() {
   }
 
   // Respuesta del programa diario
-  // console.log(daily_consumption);
-  // console.log(hours_day);
   if (daily_consumption == 0 || hours_day == 0) {
     alert("No existe consumo");
   } else {
