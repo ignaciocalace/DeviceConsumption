@@ -1,5 +1,8 @@
 show();
-let value_kw = parseInt(prompt("Ingrese el valor del kw en su moneda"));
+let value_kw;
+do {
+  value_kw = parseInt(prompt("Ingrese el valor del kw en su moneda"));
+} while (isNaN(value_kw) || value_kw < 0);
 let list = [];
 do {
   option = parseInt(
@@ -31,23 +34,32 @@ do {
 
 function show() {
   alert(
-    "Esto es un programa para calcular el consumo eléctrico y coste monetario diario, mensual y anual de cualquier dispositivo electrónico"
+    "Esto es un programa para calcular el consumo eléctrico y coste monetario diario, mensual y anual de uno o más dispositivos electrónicos"
   );
 }
 
 function createDevice() {
   let device = new Device();
+  let consumptionWatts;
+  let hoursDay = 0;
   device.id = list.length + 1;
   device.name = prompt("Ingrese nombre del dispositivo");
-  device.consumption = parseInt(
-    prompt("Ingrese el consumo de su dispositivo en watts")
-  );
+  do {
+    consumptionWatts = parseInt(
+      prompt("Ingrese el consumo de su dispositivo en watts")
+    );
+  } while (isNaN(consumptionWatts) || consumptionWatts < 0);
+  do {
+    hoursDay = parseInt(
+      prompt("Ingrese cuantas horas al día que utiliza el dispositivo")
+    );
+  } while (isNaN(hoursDay) || hoursDay < 0);
+
+  device.consumption = consumptionWatts;
   device.efficiency = prompt(
     "Ingrese eficiencia del dispositivo, rango de A - F"
   );
-  device.time_on = parseInt(
-    prompt("Ingrese cuantas horas al día que utiliza el dispositivo")
-  );
+  device.time_on = hoursDay;
   device.room = prompt("Ingrese en que habitación se encuentra su dispositivo");
   return device;
 }
@@ -62,9 +74,10 @@ function showList() {
     let monthly_consumption = daily_consumption * 30;
     let anual_consumption = monthly_consumption * 12;
     console.log(
-      `Nombre: ${item.name} \n` +
+      `Id: ${item.id} \n ` +
+        ` Nombre: ${item.name} \n` +
         `Eficiencia: ${item.efficiency} \n` +
-        `Tiempo encendido: ${item.time_on} \n` +
+        `Tiempo encendido: ${item.time_on}hs \n` +
         `Habitación: ${item.room} \n` +
         `Consumo y gasto diario: ${Math.ceil(
           daily_consumption
@@ -88,15 +101,29 @@ function showSummary() {
     totalMonthly += totalDaily * 30;
     totalAnual += totalMonthly * 12;
   }
+  switch (list.length) {
+    case 0: {
+      alert(`No tiene ningun dispositivo agregado`);
+      break;
+    }
+    case 1: {
+      alert(`Tiene un dispositivo agregado`);
+      break;
+    }
+    default: {
+      alert(`Tiene agregados ${list.length} dispositivos`);
+      break;
+    }
+  }
   alert(
-    `Consumo y gasto diario: ${Math.ceil(totalDaily)}kw y $${Math.ceil(
-      totalDaily * value_kw
-    )}\n` +
-      `Consumo y gasto mensual: ${Math.ceil(totalMonthly)}kw y $${Math.ceil(
-        totalMonthly * value_kw
-      )}\n` +
-      `Consumo y gasto anual: ${Math.ceil(totalAnual)}kw y $${Math.ceil(
-        totalAnual * value_kw
-      )}\n`
+    `Su consumo diario es de ${Math.ceil(
+      totalDaily
+    )}kw y un gasto de $${Math.ceil(totalDaily * value_kw)}\n` +
+      `Su consumo mensual es de ${Math.ceil(
+        totalMonthly
+      )}kw y un gasto de $${Math.ceil(totalMonthly * value_kw)}\n` +
+      `Su consumo anual es de ${Math.ceil(
+        totalAnual
+      )}kw y un gasto de $${Math.ceil(totalAnual * value_kw)}\n`
   );
 }
